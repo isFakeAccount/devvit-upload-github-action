@@ -21,10 +21,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
       - name: Devvit Upload Github Action
         uses: isFakeAccount/devvit-upload-github-action@v0.0.1
         with:
             refresh_token: ${{ secrets.REFRESH_TOKEN }}
+      
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: Bumping the app version number
+
 ```
 
 In this example, the workflow will be triggered whenever there is a push event in your repository. 
