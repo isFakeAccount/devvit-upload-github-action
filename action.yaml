@@ -16,13 +16,13 @@ runs:
     - run: npm install -g devvit
       shell: bash
 
-    - name: Create TOKEN file
-      shell: "bash"
-      run: python token_file.py ${{inputs.refresh_token}}
-
-    - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
 
     - name: Create TOKEN file
       shell: bash
       run: python token_file.py ${{inputs.refresh_token}}
+    
+    - name: Upload to Devvit
+      shell: bash
+      run: devvit upload
+
