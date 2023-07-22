@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 if __name__ == "__main__":
-    refresh_token = sys.argv[2]
+    refresh_token = sys.argv[1]
     devvit_token = {"token": refresh_token, "copyPaste": False}
 
     devvit_dir = Path.home() / ".devvit"
