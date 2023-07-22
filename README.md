@@ -6,6 +6,8 @@ The Devvit App Upload GitHub Action is a custom GitHub Action designed to stream
 ## Inputs
 - `refresh_token`: The refresh token associated with your Devvit account. You have to extract the refresh token manually. For Linux, the refresh token is saved in file `~/.devvit/token`. Copy the whole thing and insert it as Github Secret in your repository. 
 
+- `GITHUB_TOKEN`: This is automaticaly created for you provided by GitHub to authenticate and authorize actions within a GitHub Actions workflow. This token is used to updated the `devvit.yaml` after devvit upload.
+
 See the [Using encrypted secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) for more detail on adding secrets to your repository.
 
 ## Usage
