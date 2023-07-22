@@ -1,0 +1,28 @@
+name: Devvit Upload Github Action
+description: Github Acotion for uploading Devvit apps
+
+inputs:
+  refresh_token:
+    description: Refresh Token for Devvit CLI authentication.
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: latest
+
+    - run: npm install -g devvit
+      shell: bash
+
+    - name: Create TOKEN file
+      shell: "bash"
+      run: python token_file.py ${{inputs.refresh_token}}
+
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+
+    - name: Create TOKEN file
+      shell: bash
+      run: python token_file.py ${{inputs.refresh_token}}
