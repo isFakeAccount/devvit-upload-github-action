@@ -1,6 +1,10 @@
 name: Devvit Upload Github Action
 description: Github Acotion for uploading Devvit apps
 
+branding:
+  icon: upload
+  color: orange
+
 inputs:
   refresh_token:
     description: Refresh Token for Devvit CLI authentication.
