@@ -8,5 +8,5 @@ if __name__ == "__main__":
 
     devvit_dir = Path.home() / ".devvit"
     devvit_dir.mkdir(exist_ok=True)
-    token_file = Path(devvit_dir.absolute(), "token")
+    token_file = Path(devvit_dir, "token")
     token_file.write_text(json.dumps(devvit_token))
