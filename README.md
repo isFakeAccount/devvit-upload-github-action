@@ -27,7 +27,7 @@ jobs:
           persist-credentials: false
 
       - name: Devvit Upload Github Action
-        uses: isFakeAccount/devvit-upload-github-action@v0.0.1
+        uses: isFakeAccount/devvit-upload-github-action@v0.0.6
         with:
             refresh_token: ${{ secrets.REFRESH_TOKEN }}
       
