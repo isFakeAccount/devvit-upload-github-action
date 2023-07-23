@@ -20,15 +20,18 @@ runs:
     - run: npm install -g devvit
       shell: bash
 
+    - name: Install Node modules
+      shell: bash
+      run: npm install
+
     - uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: "3.11"
 
     - name: Create TOKEN file
       shell: bash
       run: python "${{ github.action_path }}/token_file.py" ${{inputs.refresh_token}}
-    
+
     - name: Upload to Devvit
       shell: bash
       run: devvit upload
-
