@@ -21,6 +21,8 @@ runs:
       shell: bash
 
     - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
 
     - name: Create TOKEN file
       shell: bash
