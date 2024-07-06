@@ -45,7 +45,7 @@ runs:
           TAG_NAME="${{ github.ref_name }}"
           BUMP_FLAG=$(python3 "${{ github.action_path }}/set_app_version.py" "$TAG_NAME")
           echo "Running: devvit upload $BUMP_FLAG"
-          yes | devvit upload $BUMP_FLAG
+          echo "y" | devvit upload $BUMP_FLAG
         else
           echo "Running: devvit upload ${{ inputs.upload_args }}"
           devvit upload ${{ inputs.upload_args }}
