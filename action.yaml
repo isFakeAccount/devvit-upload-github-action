@@ -1,5 +1,5 @@
 name: Devvit Upload Github Action
-description: Github Acotion for uploading Devvit apps
+description: Github Action for uploading Devvit apps
 
 branding:
   icon: upload
@@ -9,6 +9,10 @@ inputs:
   refresh_token:
     description: Refresh Token for Devvit CLI authentication.
     required: true
+  upload_args:
+    description: Optional command line arguments for devvit upload.
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -24,14 +28,30 @@ runs:
       shell: bash
       run: npm install
 
-    - uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+    - uses: actions/setup-python@v5
+
+    - name: Install Python dependencies
+      shell: bash
+      run: pip install -r "${{ github.action_path }}/requirements.txt"
 
     - name: Create TOKEN file
       shell: bash
-      run: python "${{ github.action_path }}/token_file.py" ${{inputs.refresh_token}}
+      run: python3 "${{ github.action_path }}/token_file.py" ${{ inputs.refresh_token }}
 
-    - name: Upload and Publish to Devvit
+    - name: Devvit Upload
       shell: bash
-      run: devvit upload && devvit publish
+      run: |
+        if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == refs/tags/* ]]; then
+          TAG_NAME="${{ github.ref_name }}"
+          BUMP_FLAG=$(python3 "${{ github.action_path }}/set_app_version.py $TAG_NAME")
+          echo "Running: devvit upload $BUMP_FLAG"
+          devvit upload $BUMP_FLAG
+        else
+          echo "Running: devvit upload ${{ inputs.upload_args }}"
+          devvit upload ${{ inputs.upload_args }}
+        fi
+
+    - name: Devvit Publish
+      if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+      shell: bash
+      run: devvit publish
