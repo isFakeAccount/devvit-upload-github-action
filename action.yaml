@@ -13,7 +13,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
         node-version: latest
 
@@ -32,6 +32,6 @@ runs:
       shell: bash
       run: python "${{ github.action_path }}/token_file.py" ${{inputs.refresh_token}}
 
-    - name: Upload to Devvit
+    - name: Upload and Publish to Devvit
       shell: bash
-      run: devvit upload
+      run: devvit upload && devvit publish
