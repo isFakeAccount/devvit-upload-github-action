@@ -10,7 +10,7 @@ def print_bump_flag(
         print("--bump=major")
     elif new_version.minor - previous_version.minor == 1:
         print("--bump=minor")
-    elif new_version.minor - previous_version.minor == 1:
+    elif new_version.patch - previous_version.patch == 1:
         print("--bump=patch")
     else:
         raise ValueError(
