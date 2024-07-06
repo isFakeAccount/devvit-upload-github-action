@@ -12,32 +12,69 @@ See the [Using encrypted secrets](https://docs.github.com/en/actions/security-gu
 
 ## Usage
 
-To use the Devvit App Upload GitHub Action in your repository, you need to create or update a GitHub Actions workflow file (e.g., .github/workflows/devvit-upload.yml) and add the following content:
+To use the Devvit App Upload GitHub Action in your repository, you need to create or update a GitHub Actions workflow file (e.g., .github/workflows/devvit-upload.yml):
+
+You can use the action on two types of events
+
+### Upload on release
+The version number will be based on the tag name which should be named like `vMajor.Minor.Patch` (e.g `v0.1.0`)
 
 ```yaml
-name: Push to Devvit
-on: push
+name: Publish to Devvit
+on:
+  push:
+    tags:
+      - 'v[0-9]*.[0-9]*.[0-9]*'
 
 jobs:
   push-to-devvit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: Devvit Upload Github Action
-        uses: isFakeAccount/devvit-upload-github-action@v0.0.6
+        uses: isFakeAccount/devvit-upload-github-action@v0.0.11
         with:
-            refresh_token: ${{ secrets.REFRESH_TOKEN }}
-      
+          refresh_token: ${{ secrets.REFRESH_TOKEN }}
+
       - name: Commit & Push changes
         uses: actions-js/push@master
         with:
-          branch: main
+          branch: master
           github_token: ${{ secrets.GITHUB_TOKEN }}
           message: Bumping the app version number
 
 ```
 
-In this example, the workflow will be triggered whenever there is a push event in your repository. 
+### Upload on push
+```yaml
+name: Publish to Devvit
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  push-to-devvit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Devvit Upload Github Action
+        uses: isFakeAccount/devvit-upload-github-action@v0.0.11
+        with:
+          refresh_token: ${{ secrets.REFRESH_TOKEN }}
+          upload_args: "--bump=minor"
+
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          branch: master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: Bumping the app version number
+
+```

@@ -3,43 +3,30 @@ import semver
 import yaml
 
 
-def get_previous_version(app_version: semver.Version) -> semver.Version:
-    if app_version.major > 0:
+def print_bump_flag(
+    new_version: semver.Version, previous_version: semver.Version
+) -> None:
+    if new_version.major - previous_version.major == 1:
         print("--bump=major")
-        return semver.Version(
-            major=app_version.major - 1,
-            minor=app_version.minor,
-            patch=app_version.patch,
-            prerelease=app_version.prerelease,
-            build=app_version.build,
-        )
-    elif app_version.minor > 0:
+    elif new_version.minor - previous_version.minor == 1:
         print("--bump=minor")
-        return semver.Version(
-            major=app_version.major,
-            minor=app_version.minor - 1,
-            patch=app_version.patch,
-            prerelease=app_version.prerelease,
-            build=app_version.build,
-        )
-    else:
+    elif new_version.minor - previous_version.minor == 1:
         print("--bump=patch")
-        return semver.Version(
-            major=app_version.major,
-            minor=app_version.minor,
-            patch=app_version.patch - 1,
-            prerelease=app_version.prerelease,
-            build=app_version.build,
+    else:
+        raise ValueError(
+            "Invalid version bump detected. Ensure that the version change follows Semantic Versioning rules, with only one of major, minor, or patch incremented by exactly 1."
         )
 
 
 if __name__ == "__main__":
     tag_name = sys.argv[1]
-    app_version = semver.Version.parse(tag_name.removeprefix("v"))
-    previous_version = get_previous_version(app_version=app_version)
+    new_version = semver.Version.parse(tag_name.removeprefix("v"))
 
-    with open("devvit.yaml", "r+") as fp:
+    with open("devvit.yaml", "r") as fp:
         devvit_yaml = yaml.safe_load(fp)
-        fp.seek(0)
-        devvit_yaml["version"] = str(previous_version)
-        yaml.safe_dump(devvit_yaml, fp)
+        current_version = semver.Version.parse(devvit_yaml["version"])
+
+        if new_version.compare(current_version) <= 0:
+            raise ValueError("New version must be greater than old version")
+
+        print_bump_flag(new_version, current_version)
